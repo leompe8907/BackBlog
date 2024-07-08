@@ -1,5 +1,6 @@
 # Ignorar archivo env
 /env
+/venv
 
 # Ignorar archivo de configuración de IDE
 /.idea
