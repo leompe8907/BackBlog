@@ -119,7 +119,7 @@ def logout():
     logout_user()
     return jsonify({'success': 'Te has deslogueado exitosamente.'}), 200
 
-@main.route('/publicaciones', methods=['GET'])
+@main.route('/publicacion', methods=['GET'])
 @cross_origin(origins=["http://localhost:5000", "http://127.0.0.1:5500", "https://tifblog.vercel.app"], supports_credentials=True)
 def obtener_publicaciones():
     publicaciones = Publicaciones.query.filter_by(tipo='publicacion').order_by(Publicaciones.date.desc()).all()
