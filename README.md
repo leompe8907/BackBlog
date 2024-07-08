@@ -1,60 +1,70 @@
-# Proyecto Flask
+# Blog en Flask
 
-Este es un proyecto basado en Flask que permite la creación y gestión de publicaciones y comentarios.
+Este proyecto es una aplicación web de blog desarrollada con Flask, SQLAlchemy y MySQL. La aplicación permite a los usuarios registrarse, iniciar sesión, crear publicaciones, comentar en publicaciones, editar y eliminar sus propias publicaciones.
 
 ## Requisitos
 
-Para poder ejecutar este proyecto, necesitas tener instalado:
-
-- Python 3.8 o superior
-- Flask 2.0 o superior
-- Una base de datos (SQLite, PostgreSQL, etc.)
+- Python 3.x
+- MySQL
+- Virtualenv (opcional pero recomendado)
 
 ## Instalación
 
-1. Clona el repositorio:
+1. Clonar el repositorio:
+    ```bash
+    git clone https://github.com/leompe8907/BackBlog.git
+    cd tu-repo
+    ```
 
-   ```bash
-   git clone https://github.com/leompe8907/flask.git
+2. Crear y activar un entorno virtual (opcional pero recomendado):
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # En Windows usa `venv\Scripts\activate`
+    ```
 
-2. Crea un entorno virtual:
-    python -m venv env
-    source env/bin/activate
-
-3. Instala las dependencias:
+3. Instalar las dependencias:
+    ```bash
     pip install -r requirements.txt
+    ```
 
-4. Configura la base de datos:
-    Configurar el usuario, contraseña y la base de datos en el archivo config.py
-    SQLALCHEMY_DATABASE_URI = 'mysql://root:@localhost/blogdb'
+4. Configurar la base de datos MySQL:
+    - Crear una base de datos llamada `blogdb`.
+    - Actualizar la URI de la base de datos en el archivo `config.py` si es necesario.
 
-5. Instala las dependencias:
-    pip install -r requirements.txt
+    ```python
+    class Config:
+        SQLALCHEMY_DATABASE_URI = 'mysql://root:password@localhost/blogdb'
+        SQLALCHEMY_TRACK_MODIFICATIONS = False
+        SECRET_KEY = os.urandom(24)
+    ```
 
-6. Ejecutar la app:
+5. Crear las tablas en la base de datos:
+    ```bash
+    flask db init
+    flask db migrate
+    flask db upgrade
+    ```
+
+## Ejecución
+
+1. Ejecutar la aplicación:
+    ```bash
     python app.py
+    ```
 
-Estructura del Proyecto:
-* app.py: Archivo principal que inicia la aplicación Flask.
-* config.py: Archivo de configuración donde se definen las variables de entorno.
-* requirements.txt: Archivo con las dependencias necesarias para el proyecto.
-    - app/: Carpeta que contiene el código de la aplicación.
-        * __init__.py: Inicializa la aplicación y las extensiones.
-        * extensions.py: Configura las extensiones utilizadas (por ejemplo, SQLAlchemy).
-        * forms.py: Define los formularios de Flask-WTF.
-        * models.py: Define los modelos de base de datos.
-        * routes.py: Define las rutas de la aplicación.
-    - static/: Carpeta que contiene archivos estáticos como CSS y JavaScript.
-        * login.css: Estilos para la página de login.
-        * register.css: Estilos para la página de registro.
-    - templates/: Carpeta que contiene las plantillas HTML.
-        * base.html: Plantilla base para la aplicación.
-        * editar_comentario.html: Plantilla para editar comentarios.
-        * editar_publicacion.html: Plantilla para editar publicaciones.
-        * index.html: Plantilla principal que muestra las publicaciones y comentarios.
-        * login.html: Plantilla para la página de login.
-        * publicacion.html: Plantilla para mostrar una publicación individual.
-        * register.html: Plantilla para la página de registro.
+2. Abrir el navegador web y acceder a `http://localhost:5000`.
+
+## Endpoints
+
+- `POST /register`: Registro de nuevos usuarios.
+- `POST /login`: Inicio de sesión de usuarios.
+- `GET /logout`: Cierre de sesión de usuarios.
+- `GET /publicaciones`: Obtiene todas las publicaciones.
+- `POST /publicaciones`: Crea una nueva publicación.
+- `POST /comentar/<int:publicacion_id>`: Comenta en una publicación.
+- `DELETE /eliminar/<int:id>`: Elimina una publicación.
+- `PUT /editar/<int:id>`: Edita una publicación.
+- `GET /publicaciones/<int:id>`: Obtiene una publicación específica.
 
 Uso:
 La página principal (/) muestra todas las publicaciones y sus respuestas, los usuarios pueden registrarse y loguearse a través de la barra superior. Los usuarios registrados pueden crear, editar y eliminar sus publicaciones, todos los usuarios pueden ver las publicaciones y comentarios, pero solo los usuarios registrados pueden comentar o responder.
