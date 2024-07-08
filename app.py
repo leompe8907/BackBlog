@@ -17,7 +17,7 @@ app.config['SESSION_COOKIE_SECURE'] = False  # Cambia a True en producción con 
 app.config['SESSION_COOKIE_HTTPONLY'] = True
 app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'  # Puede ser 'Strict', 'Lax' o 'None'
 
-CORS(app, origins=["http://localhost:5000", "http://127.0.0.1:5500"], supports_credentials=True)
+CORS(app, origins=["http://localhost:5000", "http://127.0.0.1:5500","https://tifblog.vercel.app/","https://leonard27.pythonanywhere.com/"], supports_credentials=True)
 
 main = Blueprint('main', __name__)
 
@@ -71,7 +71,7 @@ def verify_token(token):
         return None
 
 @main.route('/register', methods=['POST'])
-@cross_origin(origins=["http://localhost:5000", "http://127.0.0.1:5500"], supports_credentials=True)
+@cross_origin(origins=["http://localhost:5000", "http://127.0.0.1:5500","https://tifblog.vercel.app/","https://leonard27.pythonanywhere.com/"], supports_credentials=True)
 def register():
     data = request.json
     email = data.get('email')
@@ -86,7 +86,7 @@ def register():
     return jsonify({'success': 'Felicidades, te has registrado'}), 201
 
 @main.route('/login', methods=['POST'])
-@cross_origin(origins=["http://localhost:5000", "http://127.0.0.1:5500"], supports_credentials=True)
+@cross_origin(origins=["http://localhost:5000", "http://127.0.0.1:5500","https://tifblog.vercel.app/","https://leonard27.pythonanywhere.com/"], supports_credentials=True)
 def login():
     data = request.json
     email = data.get('email')
@@ -98,7 +98,7 @@ def login():
     return jsonify({'success': 'Inicio de Sesión Exitosa','token': token}), 200
 
 @main.route('/logout', methods=['GET'])
-@cross_origin(origins=["http://localhost:5000", "http://127.0.0.1:5500"], supports_credentials=True)
+@cross_origin(origins=["http://localhost:5000", "http://127.0.0.1:5500","https://tifblog.vercel.app/","https://leonard27.pythonanywhere.com/"], supports_credentials=True)
 def logout():
     auth_header = request.headers.get('Authorization')
     if auth_header:
@@ -117,7 +117,7 @@ def logout():
     return jsonify({'success': 'Te has deslogueado exitosamente.'}), 200
 
 @main.route('/publicaciones', methods=['GET'])
-@cross_origin(origins=["http://localhost:5000", "http://127.0.0.1:5500"], supports_credentials=True)
+@cross_origin(origins=["http://localhost:5000", "http://127.0.0.1:5500","https://tifblog.vercel.app/","https://leonard27.pythonanywhere.com/"], supports_credentials=True)
 def obtener_publicaciones():
     publicaciones = Publicaciones.query.filter_by(tipo='publicacion').order_by(Publicaciones.date.desc()).all()
     publicaciones_list = []
@@ -127,7 +127,7 @@ def obtener_publicaciones():
     return jsonify(publicaciones_list), 200
 
 @main.route('/publicaciones', methods=['POST'])
-@cross_origin(origins=["http://localhost:5000", "http://127.0.0.1:5500"], supports_credentials=True)
+@cross_origin(origins=["http://localhost:5000", "http://127.0.0.1:5500","https://tifblog.vercel.app/","https://leonard27.pythonanywhere.com/"], supports_credentials=True)
 def crear_publicacion():
     auth_header = request.headers.get('Authorization')
     if auth_header:
@@ -150,7 +150,7 @@ def crear_publicacion():
     return jsonify({'success': 'Tu publicación ha sido creada!'}), 201
 
 @main.route('/comentar/<int:publicacion_id>', methods=['POST'])
-@cross_origin(origins=["http://localhost:5000", "http://127.0.0.1:5500"], supports_credentials=True)
+@cross_origin(origins=["http://localhost:5000", "http://127.0.0.1:5500","https://tifblog.vercel.app/","https://leonard27.pythonanywhere.com/"], supports_credentials=True)
 def comentar(publicacion_id):
     auth_header = request.headers.get('Authorization')
     if auth_header:
@@ -173,7 +173,7 @@ def comentar(publicacion_id):
     return jsonify({"success": "Tu comentario ha sido publicado"}), 201
 
 @main.route('/eliminar/<int:id>', methods=['DELETE'])
-@cross_origin(origins=["http://localhost:5000", "http://127.0.0.1:5500"], supports_credentials=True)
+@cross_origin(origins=["http://localhost:5000", "http://127.0.0.1:5500","https://tifblog.vercel.app/","https://leonard27.pythonanywhere.com/"], supports_credentials=True)
 def eliminar_publicacion(id):
     auth_header = request.headers.get('Authorization')
     if auth_header:
@@ -204,7 +204,7 @@ def eliminar_publicacion(id):
         return jsonify({'error': 'Error al eliminar la publicación: {}'.format(str(e))}), 500
 
 @main.route('/editar/<int:id>', methods=['PUT'])
-@cross_origin(origins=["http://localhost:5000", "http://127.0.0.1:5500"], supports_credentials=True)
+@cross_origin(origins=["http://localhost:5000", "http://127.0.0.1:5500","https://tifblog.vercel.app/","https://leonard27.pythonanywhere.com/"], supports_credentials=True)
 def editar_publicacion(id):
     auth_header = request.headers.get('Authorization')
     if auth_header:
@@ -229,7 +229,7 @@ def editar_publicacion(id):
     return jsonify({'success': 'Tu publicación ha sido actualizada!'}), 200
 
 @main.route('/publicaciones/<int:id>', methods=['GET'])
-@cross_origin(origins=["http://localhost:5000", "http://127.0.0.1:5500"], supports_credentials=True)
+@cross_origin(origins=["http://localhost:5000", "http://127.0.0.1:5500","https://tifblog.vercel.app/","https://leonard27.pythonanywhere.com/"], supports_credentials=True)
 def obtener_publicacion(id):
     publicacion = Publicaciones.query.get_or_404(id)
     return jsonify({'contenido': publicacion.contenido}), 200
