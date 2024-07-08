@@ -66,9 +66,11 @@ Este proyecto es una aplicación web de blog desarrollada con Flask, SQLAlchemy 
 - `PUT /editar/<int:id>`: Edita una publicación.
 - `GET /publicaciones/<int:id>`: Obtiene una publicación específica.
 
-Uso:
-La página principal (/) muestra todas las publicaciones y sus respuestas, los usuarios pueden registrarse y loguearse a través de la barra superior. Los usuarios registrados pueden crear, editar y eliminar sus publicaciones, todos los usuarios pueden ver las publicaciones y comentarios, pero solo los usuarios registrados pueden comentar o responder.
+## Seguridad
 
-Contribuciones
-Las contribuciones son bienvenidas. Por favor, abre un issue o un pull request para discutir cualquier cambio que te gustaría hacer.
+- Asegúrate de configurar correctamente las variables de entorno para la base de datos y la clave secreta en un entorno de producción.
+- Usa HTTPS para asegurar la comunicación entre el cliente y el servidor.
 
+## Contribuciones
+
+Las contribuciones son bienvenidas. Por favor, abre un issue o un pull request para cualquier mejora o corrección.
