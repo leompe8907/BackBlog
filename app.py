@@ -120,16 +120,6 @@ def logout():
     return jsonify({'success': 'Te has deslogueado exitosamente.'}), 200
 
 @main.route('/publicaciones', methods=['GET'])
-@cross_origin(origins=["http://localhost:5000", "http://127.0.0.1:5500","https://tifblog.vercel.app"], supports_credentials=True)
-def obtener_publicaciones():
-    publicaciones = Publicaciones.query.filter_by(tipo='publicacion').order_by(Publicaciones.date.desc()).all()
-    publicaciones_list = []
-    for pub in publicaciones:
-        comentarios = [{'id': com.id, 'contenido': com.contenido, 'autor': com.autor.nombre, 'date': com.date} for com in pub.comentarios]
-        publicaciones_list.append({'id': pub.id, 'contenido': pub.contenido, 'autor': pub.autor.nombre, 'date': pub.date, 'comentarios': comentarios})
-    return jsonify(publicaciones_list), 200
-
-@main.route('/publicaciones', methods=['GET'])
 @cross_origin(origins=["http://localhost:5000", "http://127.0.0.1:5500", "https://tifblog.vercel.app"], supports_credentials=True)
 def obtener_publicaciones():
     publicaciones = Publicaciones.query.filter_by(tipo='publicacion').order_by(Publicaciones.date.desc()).all()
