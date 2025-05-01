@@ -108,18 +108,20 @@ def login():
 @main.route('/logout', methods=['GET'])
 @cross_origin(origins=["http://localhost:5000", "http://127.0.0.1:5500","https://tifblog.vercel.app"], supports_credentials=True)
 def logout():
-    auth_header = request.headers.get('Authorization')
-    if auth_header:
-        try:
-            token = auth_header.split(" ")[1]
-        except IndexError:
-            return jsonify({'error': 'Token inválido'}), 401
-    else:
-        return jsonify({'error': 'Token no proporcionado'}), 401
+    # auth_header = request.headers.get('Authorization')
+    # if auth_header:
+    #     try:
+    #         token = auth_header.split(" ")[1]
+    #     except IndexError:
+    #         return jsonify({'error': 'Token inválido'}), 401
+    # else:
+    #     return jsonify({'error': 'Token no proporcionado'}), 401
 
-    user = verify_token(token)
+    # user = verify_token(token)
+    user = Usuarios.query.first()  # Obtén el primer usuario de la base de datos (ejemplo)
+
     if not user:
-        return jsonify({'error': 'Token inválido o expirado'}), 401
+        return jsonify({'error': 'No se encontró un usuario en la base de datos.'}), 400
 
     logout_user()
     return jsonify({'success': 'Te has deslogueado exitosamente.'}), 200
