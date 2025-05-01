@@ -19,7 +19,8 @@ Este proyecto es una aplicación web de blog desarrollada con Flask, SQLAlchemy 
 2. Crear y activar un entorno virtual (opcional pero recomendado):
     ```bash
     python -m venv venv
-    source venv/bin/activate  # En Windows usa `venv\Scripts\activate`
+    source  En linux -> venv/bin/activate  
+            En Windows usa -> `venv\Scripts\activate`
     ```
 
 3. Instalar las dependencias:
