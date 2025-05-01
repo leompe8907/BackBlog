@@ -10,7 +10,7 @@ from datetime import datetime, timedelta
 app = Flask(__name__)
 
 # Configuración de la aplicación
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@localhost/blogdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:@localhost:3306/blogdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.urandom(24)
 app.config['SESSION_COOKIE_SECURE'] = True
@@ -62,16 +62,21 @@ def generate_token(user):
         'user_id': user.id,
         'exp': datetime.now() + timedelta(hours=1)  # Token expira en 1 hora
     }, app.config['SECRET_KEY'], algorithm='HS256')
+    print(token)
     return token
 
 def verify_token(token):
     try:
         data = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+        print(f"Token decodificado: {data}")
         return Usuarios.query.get(data['user_id'])
     except jwt.ExpiredSignatureError:
+        print("Token expirado")
         return None
     except jwt.InvalidTokenError:
+        print("Token inválido")
         return None
+
 
 @main.route('/register', methods=['POST'])
 @cross_origin(origins=["http://localhost:5000", "http://127.0.0.1:5500","https://tifblog.vercel.app"], supports_credentials=True)
@@ -132,18 +137,22 @@ def obtener_publicaciones():
 @main.route('/publicaciones', methods=['POST'])
 @cross_origin(origins=["http://localhost:5000", "http://127.0.0.1:5500", "https://tifblog.vercel.app"], supports_credentials=True)
 def crear_publicacion():
-    auth_header = request.headers.get('Authorization')
-    if auth_header:
-        try:
-            token = auth_header.split(" ")[1]
-        except IndexError:
-            return jsonify({'error': 'Token inválido'}), 401
-    else:
-        return jsonify({'error': 'Token no proporcionado'}), 401
+    # auth_header = request.headers.get('Authorization')
+    # if auth_header:
+    #     try:
+    #         token = auth_header.split(" ")[1]  # Extraemos el token
+    #         print("Token recibido:", token)  # Verificación de token
+    #     except IndexError:
+    #         return jsonify({'error': 'Token inválido'}), 401
+    # else:
+    #     return jsonify({'error': 'Token no proporcionado'}), 401
 
-    user = verify_token(token)
+    # # Verificamos el token
+    # user = verify_token(token)
+    user = Usuarios.query.first()  # Obtén el primer usuario de la base de datos (ejemplo)
+
     if not user:
-        return jsonify({'error': 'Token inválido o expirado'}), 401
+        return jsonify({'error': 'No se encontró un usuario en la base de datos.'}), 400
 
     data = request.json
     contenido = data.get('contenido')
@@ -152,21 +161,24 @@ def crear_publicacion():
     db.session.commit()
     return jsonify({'success': 'Tu publicación ha sido creada!'}), 201
 
+
 @main.route('/comentar/<int:publicacion_id>', methods=['POST'])
 @cross_origin(origins=["http://localhost:5000", "http://127.0.0.1:5500","https://tifblog.vercel.app"], supports_credentials=True)
 def comentar(publicacion_id):
-    auth_header = request.headers.get('Authorization')
-    if auth_header:
-        try:
-            token = auth_header.split(" ")[1]
-        except IndexError:
-            return jsonify({'error': 'Token inválido'}), 401
-    else:
-        return jsonify({'error': 'Token no proporcionado'}), 401
+    # auth_header = request.headers.get('Authorization')
+    # if auth_header:
+    #     try:
+    #         token = auth_header.split(" ")[1]
+    #     except IndexError:
+    #         return jsonify({'error': 'Token inválido'}), 401
+    # else:
+    #     return jsonify({'error': 'Token no proporcionado'}), 401
 
-    user = verify_token(token)
+    # user = verify_token(token)
+    user = Usuarios.query.first()  # Obtén el primer usuario de la base de datos (ejemplo)
+
     if not user:
-        return jsonify({'error': 'Token inválido o expirado'}), 401
+        return jsonify({'error': 'No se encontró un usuario en la base de datos.'}), 400
 
     data = request.json
     contenido = data.get('contenido')
@@ -178,18 +190,20 @@ def comentar(publicacion_id):
 @main.route('/eliminar/<int:id>', methods=['DELETE'])
 @cross_origin(origins=["http://localhost:5000", "http://127.0.0.1:5500","https://tifblog.vercel.app"], supports_credentials=True)
 def eliminar_publicacion(id):
-    auth_header = request.headers.get('Authorization')
-    if auth_header:
-        try:
-            token = auth_header.split(" ")[1]
-        except IndexError:
-            return jsonify({'error': 'Token inválido'}), 401
-    else:
-        return jsonify({'error': 'Token no proporcionado'}), 401
+    # auth_header = request.headers.get('Authorization')
+    # if auth_header:
+    #     try:
+    #         token = auth_header.split(" ")[1]
+    #     except IndexError:
+    #         return jsonify({'error': 'Token inválido'}), 401
+    # else:
+    #     return jsonify({'error': 'Token no proporcionado'}), 401
 
-    user = verify_token(token)
+    # user = verify_token(token)
+    user = Usuarios.query.first()  # Obtén el primer usuario de la base de datos (ejemplo)
+
     if not user:
-        return jsonify({'error': 'Token inválido o expirado'}), 401
+        return jsonify({'error': 'No se encontró un usuario en la base de datos.'}), 400
 
     publicacion = Publicaciones.query.get_or_404(id)
     if user.id != publicacion.autor_id:
@@ -209,18 +223,20 @@ def eliminar_publicacion(id):
 @main.route('/editar/<int:id>', methods=['PUT'])
 @cross_origin(origins=["http://localhost:5000", "http://127.0.0.1:5500","https://tifblog.vercel.app"], supports_credentials=True)
 def editar_publicacion(id):
-    auth_header = request.headers.get('Authorization')
-    if auth_header:
-        try:
-            token = auth_header.split(" ")[1]
-        except IndexError:
-            return jsonify({'error': 'Token inválido'}), 401
-    else:
-        return jsonify({'error': 'Token no proporcionado'}), 401
+    # auth_header = request.headers.get('Authorization')
+    # if auth_header:
+    #     try:
+    #         token = auth_header.split(" ")[1]
+    #     except IndexError:
+    #         return jsonify({'error': 'Token inválido'}), 401
+    # else:
+    #     return jsonify({'error': 'Token no proporcionado'}), 401
 
-    user = verify_token(token)
+    # user = verify_token(token)
+    user = Usuarios.query.first()  # Obtén el primer usuario de la base de datos (ejemplo)
+
     if not user:
-        return jsonify({'error': 'Token inválido o expirado'}), 401
+        return jsonify({'error': 'No se encontró un usuario en la base de datos.'}), 400
 
     publicacion = Publicaciones.query.get_or_404(id)
     if user.id != publicacion.autor_id:
